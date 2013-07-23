@@ -1,6 +1,6 @@
 {
-  "name": "src",
-  "version": "0.0.0",
+  "name": "appName",
+  "version": "0.0.1",
   "dependencies": {},
   "devDependencies": {
     "qunit": "~1.11.0"
