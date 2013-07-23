@@ -20,8 +20,7 @@ module.exports = function(grunt) {
         },
         jshint: {
             options: grunt.file.readJSON('.jshintrc'),
-            beforeConcat: [ '<%= pkg.directories.lib %>/js/*.js' ],
-            afterConcat: [ '<%= pkg.directories.build %>/js/main.js' ]
+            dist: [ '<%= pkg.directories.build %>/js/main.js' ]
         },
         concat: {
             options: {
@@ -30,6 +29,15 @@ module.exports = function(grunt) {
             dist: {
                 src: [ '<%= pkg.directories.lib %>/js/*.js' ],
                 dest: '<%= pkg.directories.build %>/js/main.js'
+            }
+        },
+        strip_code: {
+            options: {
+                start_comment: 'test-code',
+                end_comment: 'end-test-code'
+            },
+            dist: {
+                src: '<%= concat.dist.dest %>'
             }
         },
         copy: {
@@ -76,7 +84,7 @@ module.exports = function(grunt) {
             },
             js: {
                 files: '<%= concat.dist.src %>',
-                tasks: [ 'clean:js', 'build' ]
+                tasks: [ 'clean:js', 'default' ]
             },
             html: {
                 files: '<%= copy.dist.src %>',
@@ -93,14 +101,36 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-strip-code');
 //  grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-bower-task');
 
     // Default task.
-    grunt.registerTask('build', [ 'copy', 'jshint:beforeConcat', 'concat', 'jshint:afterConcat' ]);
-    grunt.registerTask('minify', [ 'build', 'uglify' ]);
-    grunt.registerTask('test', [ 'clean:dist', 'build'/*, 'qunit'*/ ]);
-    grunt.registerTask('default', [ 'clean:dist', 'bower', 'build', /*'qunit',*/ 'uglify' ]);
-    grunt.registerTask('debug', [ 'default', 'connect', 'watch' ]);
+    grunt.registerTask('build', [
+                       'copy',
+                       'concat'
+    ]);
+
+    grunt.registerTask('test', [
+                       'clean:dist',
+                       'bower',
+                       'build',
+                       'jshint'
+                       /*, 'qunit'*/
+    ]);
+
+    grunt.registerTask('default', [
+                       'test',
+                       'strip_code',
+                       // do a second jshint check after removing test code
+                       'jshint',
+                       'uglify'
+    ]);
+
+    grunt.registerTask('debug', [
+                       'default',
+                       'connect',
+                       'watch'
+    ]);
 
 };
