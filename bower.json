@@ -1,7 +1,9 @@
 {
   "name": "appName",
   "version": "0.0.1",
-  "dependencies": {},
+  "dependencies": {
+    "jquery": "1"
+  },
   "devDependencies": {
     "qunit": "~1.11.0"
   }

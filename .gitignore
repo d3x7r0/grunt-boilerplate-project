@@ -1,3 +1,4 @@
+src/main/js/libs/
 node_modules
 dist
 tmp
