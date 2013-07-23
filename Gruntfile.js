@@ -7,7 +7,7 @@ module.exports = function(grunt) {
         clean: {
             dist: [ '<%= pkg.directories.build %>/' ],
             libs: [ '<%= bower.install.options.targetDir %>' ],
-            js: [ '<%= concat.dist.src %>', '<%=concat.dist.dest %>' ],
+            js: [ '<%= concat.dist.dest %>', '<%= uglify.dist.dest %>' ],
             html: [ '<%= copy.dist.src %>' ]
         },
         bower: {
@@ -53,9 +53,8 @@ module.exports = function(grunt) {
                 banner: '/*! <%= pkg.name %> (<= pkg.version %>) <%= grunt.template.today("dd-mm-yyyy") %> */\n'
             },
             dist: {
-                files: {
-                    '<%= pkg.directories.build %>/js/main.min.js': [ '<%= pkg.directories.build %>/js/main.js' ]
-                }
+                src: [ '<%= pkg.directories.build %>/js/main.js' ],
+                dest: '<%= pkg.directories.build %>/js/main.min.js'
             }
         },
 /*
